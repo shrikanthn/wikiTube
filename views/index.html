@@ -1,5 +1,5 @@
 <style>
-iframe {
+#divWikiPage {
 	overflow:hidden;
 	border:none;
 	width:100%;
@@ -8,21 +8,20 @@ iframe {
 </style>
 <div style='margin-bottom: 30px;'>&nbsp;</div>
 <div class='container-fluid'>
-	<div class='row' style='margin-bottom:20px'>
+	<div class='row' style='margin-bottom:20px' id="divSearchTool">
 		<div class='col-xs-8'>
 	    	<input type="text" class="form-control col-xs-6" id="txtSearch" placeholder='Enter your search'>
 		</div>
 	</div>
+	<a class='label label-default' style='display: none' id='topMenu'>Show Search</a>
 	<div class='row' id='divWikiResults'>
 		<div class='col-xs-8'>
 			<iframe id='divWikiPage'></iframe>
 		</div>		
 		<div class='col-xs-4'>
-			<div id="youtube_video" style='display: none;'>
-			<!-- <iframe id="ytplayer" type="text/html" width="425" height="349"
-			  src="http://www.youtube.com/embed/M7lc1UVf-VE?autoplay=1&origin=http://example.com"
-			  frameborder="0"/> -->
-			</div>
+			<div id="youtube_video">
+			
+			</div> 
 			<div id="video_playlist" style='height:1000px; overflow: auto; font-size: 0.9em'>
 				&nbsp;
 				<!-- <div class="media">
