@@ -7,6 +7,7 @@ var querystring = require('querystring');
 
 exports.getJSON = function(req, res)
 {
+  console.log('fetching wiki keyword options');
   var options = {
     host: 'en.wikipedia.org',
     path: '/w/api.php?action=opensearch&format=json&search='+req.query.term+'&namespace=0&limit=100&suggest='
@@ -24,6 +25,7 @@ exports.getJSON = function(req, res)
     response.on('end', function () {
       console.log(str);
       res.set('content-type', 'application/json');
+      console.log('completed keyword fetch');
       res.send(str);
     });
   }
@@ -34,6 +36,7 @@ exports.getJSON = function(req, res)
       res.set('content-type', 'application/json');
       res.send({'Error' : call});
   }
+
 };
 
 exports.getWikiPage = function(req, res)
