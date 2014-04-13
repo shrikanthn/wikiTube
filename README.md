@@ -11,7 +11,6 @@ The following npm pacakges must be installed in local or global scope of node
 ```
 npm install jsdom xml2js
 npm install follow-redirects
-
 ```
 
 
@@ -19,8 +18,6 @@ npm install follow-redirects
 ## Start the server
 ```
 npm install jsdom xml2js
-
-
 ```
 
 Now, to run the web version of karma:
