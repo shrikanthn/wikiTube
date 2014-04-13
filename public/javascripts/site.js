@@ -14,6 +14,21 @@ $(document).ready(function(){
       select: function( event, ui ) {
 
         $.ajax( {
+            url : "/getEntities?term=" + ui.item.value, 
+            success : function(data) { 
+            if(data['items']) {
+            var items = data['items'];
+            var content = '';
+            for(var i in items)  {
+                content += "<div class='media'><a class='pull-left' href='#'> \
+                <img src='"+items[i]['snippet']['thumbnails']['default']['url']+"' alt='"+items[i]['snippet']['title']+"' class='img-thumbnail' /> \
+                </a> <div class='media-body'> <h4 class='media-heading'>"+items[i]['snippet']['title']+"</h4> "+items[i]['snippet']['description']+"</div></div>";
+            };
+            $('#video_playlist').html(content);
+            }
+          });
+
+        $.ajax( {
             url : "/getWikiPage?term=" + ui.item.value, 
             success : function(data) { 
               //$('div.container-fluid').append("<div class='row' id='divWikiResults'><div class='col-xs-8'><iframe id='divWikiPage' style='display: block' style='width:100%'></iframe></div> <div class='col-xs-4'>here is the you tube</div></div>");
@@ -23,7 +38,7 @@ $(document).ready(function(){
             }
           });
 
-        $( "#txtSearch" ).val( ui.item.value );
+        $( "#txtSearch" ).val( ui.item.value);
         return false;
       }
     });
@@ -46,7 +61,7 @@ $(document).ready(function(){
   //           };
   //           $('#video_playlist').html(content);
   //         } else {
-            
+
   //           console.log(data);
   //         }
   //       }
