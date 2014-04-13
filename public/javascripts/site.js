@@ -85,7 +85,7 @@ function getALlVideos(items) {
           for(var i in items)  {
             if(!window.loadedVideos[items[i]['id']['videoId']]) {
               content += "<div class='media'><a class='pull-left' href='#'> \
-              <img src='"+items[i]['snippet']['thumbnails']['default']['url']+"' alt='"+items[i]['snippet']['title']+"' class='img-thumbnail' /> \
+              <img src='"+items[i]['snippet']['thumbnails']['default']['url']+"' rel='"+items[i]['id']['videoId']+"' alt='"+items[i]['snippet']['title']+"' class='img-thumbnail' /> \
               </a> <div class='media-body'> <h4 class='media-heading'><a class='youtube' rel='"+items[i]['id']['videoId']+"' href='javascript:void(0)'>"+items[i]['snippet']['title']+"</a></h4> "+items[i]['snippet']['description']+"</div></div>";
               window.loadedVideos[items[i]['id']['videoId']] = items[i]['snippet']['title'];
             }
@@ -97,6 +97,12 @@ function getALlVideos(items) {
     });
   }
     $('body').delegate('a.youtube', 'click',function(evt){
+      $('#youtube_video').html('<iframe id="ytplayer" type="text/html" width="425" height="349" src="http://www.youtube.com/embed/'+$(this).attr('rel')+'?autoplay=1&origin=http://example.com" frameborder="0"/>'); 
+      $("html, body").animate({ scrollTop: 0 }, "slow");          
+    // $('#ytplayer').attr('src', "http://www.youtube.com/embed/"+$(this).attr('rel')+"?autoplay=1&origin=http://example.com");
+    });
+
+    $('body').delegate('img.img-thumbnail', 'click',function(evt){
       $('#youtube_video').html('<iframe id="ytplayer" type="text/html" width="425" height="349" src="http://www.youtube.com/embed/'+$(this).attr('rel')+'?autoplay=1&origin=http://example.com" frameborder="0"/>'); 
       $("html, body").animate({ scrollTop: 0 }, "slow");          
     // $('#ytplayer').attr('src', "http://www.youtube.com/embed/"+$(this).attr('rel')+"?autoplay=1&origin=http://example.com");
@@ -133,7 +139,7 @@ function viewEntities() {
     },
     complete : function(arg1) {
       console.log(window.loadedEntities);
-      createTableFromJson(window.loadedEntities);
+      createListFromJson(window.loadedEntities);
     }
   });
 
@@ -169,6 +175,23 @@ function createTableFromJson(data) {
     }  
     content += newRow + '</tr>';
   }
+  $('#modalBody').html(content);
+  $('#filterModal').modal('show');
+};
+
+
+function createListFromJson(data) {
+  var headers = {};
+  var content = '<ul>';
+  for(var i in data) {
+    var lst = data[i];
+    content += '<b>'+ i + '</b><ul>';
+    for(var j in lst) {
+      content += '<li>' + lst[j] + '</li>';
+    }
+    content += '</ul>';
+  }
+  content += '</ul>';
   $('#modalBody').html(content);
   $('#filterModal').modal('show');
 };
