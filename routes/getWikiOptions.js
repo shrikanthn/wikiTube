@@ -27,7 +27,12 @@ exports.getJSON = function(req, res)
     });
   }
 
-  http.request(options, callback).end();
+  var call = http.request(options, callback).end();
+  if ( call instanceof Error ) {
+    // handle the error safely
+      res.set('content-type', 'application/json');
+      res.send({'Error' : call});
+  }
 };
 
 exports.getWikiPage = function(req, res)
@@ -73,7 +78,13 @@ exports.getWikiPage = function(req, res)
     });
   }
 
-  http.request(options, callback).end();
+  var call = http.request(options, callback).end();
+  if ( call instanceof Error ) {
+    // handle the error safely
+      res.set('content-type', 'application/json');
+      res.send({'Error' : call});
+  }
+
 };
 
 
@@ -100,7 +111,11 @@ exports.searchYoutube = function(req, res)
     });
   }
 
-  https.request(options, callback).end();
+  var call = https.request(options, callback).end();
+  call.on('error', function(e) {
+    res.set('content-type', 'application/json');
+    res.send({'Error' : call});
+  });
 };
 
 exports.getYoutubeVideos = function(keywords)
@@ -122,11 +137,16 @@ exports.getYoutubeVideos = function(keywords)
     response.on('end', function () {
       console.log(str);
       console.log(response.headers);
-
+      res.set('content-type', 'text/plain');
       var newUrl = response.headers.location;
       res.send(newUrl);
     });
   }
 
-  http.request(options, callback).end();
+  var call = http.request(options, callback).end();
+  call.on('error', function(e) {
+    res.set('content-type', 'application/json');
+    res.send({'Error' : call});
+  });
+
 };
