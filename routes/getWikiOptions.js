@@ -151,7 +151,58 @@ var getYoutubeVideos = function(keywords, res)
 
 exports.getEntities = function(req, res)
 {
+
+    var data = querystring.stringify({
+        url : req.query.url,
+        apikey: "ae4799220327659bbe7444c8e61155d32f47e06a",
+        outputMode : "json",
+        maxRetrieve : "20"
+      });
+
     var options = {
+        host: 'access.alchemyapi.com',
+        path: '/calls/url/URLGetRankedNamedEntities',
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'Content-Length': data.length
+        }
+      }
+
+    callback = function(response) {  
+        var str1 = '';
+        //another chunk of data has been recieved, so append it to `str`
+        response.on('data', function (chunk) {
+          str1 += chunk;
+        });
+
+        //the whole response has been recieved, so we just print it out here
+        response.on('end', function () {
+          console.log("entity extraction ends");
+          str1 = JSON.parse(str1);
+          var entities = [];
+          for(var i=0; i<str1.entities.length; i++)
+          {
+              entities.push(str1.entities[i].text);
+              if(i == 2)
+                break;
+          }
+
+          console.log(entities);
+          getYoutubeVideos(entities.join(" "), res);
+        });  
+      };  
+
+      var call = http.request(options, callback);
+      call.write(data);
+      call.end();
+      call.on('error', function(){
+        console.error("Error while fetching entities");
+        res.set("Content-Type", "application/json");
+        res.send({"Error" :  call});
+      });
+
+    /*var options = {
       host: 'en.wikipedia.org',
       path: '/w/api.php?action=mobileview&format=json&redirect=no&sections=0&prop=text&sectionprop=toclevel|level|line|number|index|fromtitle|anchor&page='+encodeURIComponent(req.query.term)
     };
@@ -178,7 +229,7 @@ exports.getEntities = function(req, res)
       console.log(str);
 
       var data = querystring.stringify({
-        text : str,
+        url : "http://en.wikipedia.org/wiki/Tool_(band)",
         apikey: "ae4799220327659bbe7444c8e61155d32f47e06a",
         outputMode : "json",
         maxRetrieve : "20"
@@ -186,7 +237,7 @@ exports.getEntities = function(req, res)
 
       var options1 = {
         host: 'access.alchemyapi.com',
-        path: '/calls/text/TextGetRankedNamedEntities',
+        path: '/calls/url/URLGetRankedNamedEntities',
         method: 'POST',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
@@ -230,16 +281,16 @@ exports.getEntities = function(req, res)
       console.log('end of response');
 
     });
-
     
-  };
-  var call2 = http.request(options, callback);
-    call2.end();
-    call2.on('error', function(){
-      console.error("Error while fetching entities");
-      res.set("Content-Type", "application/json");
-      res.send({"Error" :  call});
-  });
-  
+    console.log('end of response');
+      var call2 = http.request(options, callback);
+      call2.end();
+      call2.on('error', function(){
+          console.error("Error while fetching entities");
+          res.set("Content-Type", "application/json");
+          res.send({"Error" :  call2});
+      });
+
+  };*/
 }
 
