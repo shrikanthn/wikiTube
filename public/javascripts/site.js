@@ -31,19 +31,24 @@ $(document).ready(function(){
 
   $( "#searchVideos").bind('click', function(){
     $.ajax( {
-        url : "/searchYoutube",
+        url : "/searchArtist",
         type : 'POST',
         datatype : 'json',
         data : {'term' : $('#txtSearchVideo').val().trim() },
         success : function(data) { 
-          var items = data['items'];
-          var content = '';
-          for(var i in items)  {
-              content += "<div class='media'><a class='pull-left' href='#'> \
-              <img src='"+items[i]['snippet']['thumbnails']['default']['url']+"' alt='"+items[i]['snippet']['title']+"' class='img-thumbnail' /> \
-              </a> <div class='media-body'> <h4 class='media-heading'>"+items[i]['snippet']['title']+"</h4> "+items[i]['snippet']['description']+"</div></div>";
-          };
-          $('#video_playlist').html(content);
+          if(data['items']) {
+            var items = data['items'];
+            var content = '';
+            for(var i in items)  {
+                content += "<div class='media'><a class='pull-left' href='#'> \
+                <img src='"+items[i]['snippet']['thumbnails']['default']['url']+"' alt='"+items[i]['snippet']['title']+"' class='img-thumbnail' /> \
+                </a> <div class='media-body'> <h4 class='media-heading'>"+items[i]['snippet']['title']+"</h4> "+items[i]['snippet']['description']+"</div></div>";
+            };
+            $('#video_playlist').html(content);
+          } else {
+            
+            console.log(data);
+          }
         }
       });
     });
