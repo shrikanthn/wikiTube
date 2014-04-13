@@ -59,7 +59,7 @@ exports.searchArtist = function(req, res)
 
 	post_req.on('error', function(e) {
 	    res.set('content-type', 'application/json');
-	    res.send({'Error' : call});
+	    res.send({'Error' : post_req});
 	  });
 
 };
