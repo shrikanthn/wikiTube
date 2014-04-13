@@ -97,7 +97,7 @@ exports.searchYoutube = function(req, res)
   console.log('searching youtube for : ' + this.searchTerm);
   var options = {
     host: 'www.googleapis.com',
-    path: '/youtube/v3/search?part=snippet&maxResults=20&order=viewCount&key=AIzaSyBgz_iSlDmVzMW2dhaNwnV9oFWjDFHDLio&q='+encodeURIComponent(req.body.term)
+    path: '/youtube/v3/search?part=snippet&maxResults=20&videoEmbeddable=true&type=video&safeSearch=moderate&order=rating&key=AIzaSyBgz_iSlDmVzMW2dhaNwnV9oFWjDFHDLio&q='+encodeURIComponent(req.body.term)
   };
 
   callback = function(response) {
@@ -128,7 +128,7 @@ var getYoutubeVideos = function(keywords, res, entities)
 {
   var options = {
     host: 'www.googleapis.com',
-    path: '/youtube/v3/search?part=snippet&maxResults=5&order=viewCount&key=AIzaSyBgz_iSlDmVzMW2dhaNwnV9oFWjDFHDLio&q='+encodeURIComponent(keywords)
+    path: '/youtube/v3/search?part=snippet&maxResults=5&videoEmbeddable=true&type=video&safeSearch=moderate&order=rating&key=AIzaSyBgz_iSlDmVzMW2dhaNwnV9oFWjDFHDLio&q='+encodeURIComponent(keywords)
   };
 
   callback = function(response) {

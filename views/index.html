@@ -22,15 +22,14 @@
 <div id="bk-layer">
 	<img src="images/bk.png" class="stretch" alt="" />
 </div>
-<div style='margin-bottom: 30px;'>&nbsp;</div>
 <div class='container-fluid'>
-	<div class='row' style='margin-bottom:20px' id="divSearchTool">
+	<div class='row' style='margin-bottom:20px; margin-top:20px' id="divSearchTool">
 		<div class='col-xs-8'>
 	    	<input type="text" class="form-control col-xs-6" id="txtSearch" placeholder='Enter your search'>
 		</div>
 		<div class='col-xs-4'> <a id="btnViewEntities" style='display: none' class='btn btn-primary btn-xs pull-right' onclick='viewEntities()'>View Entities</a> </div>
 	</div>
-	<a class='label label-default' style='display: none' id='topMenu'>Show Search</a>
+	<a class='btn btn-xs btn-success' style='display: none' id='topMenu'>Show Search</a>
 	<div class='row' id='divWikiResults'>
 		<div class='col-xs-8'>
 			<iframe id='divWikiPage'></iframe>
