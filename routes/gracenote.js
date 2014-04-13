@@ -57,9 +57,9 @@ exports.searchArtist = function(req, res)
 	post_req.write(post_data);
 	post_req.end();
 
-  	if ( post_req instanceof Error ) {
-    // handle the error safely
-    	res.set('content-type', 'application/json');
-    	res.send({'Error' : post_req});
-	}
+	post_req.on('error', function(e) {
+	    res.set('content-type', 'application/json');
+	    res.send({'Error' : call});
+	  });
+
 };
