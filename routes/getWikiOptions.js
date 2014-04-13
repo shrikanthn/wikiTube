@@ -303,3 +303,55 @@ exports.getEntities = function(req, res)
   };*/
 }
 
+
+
+
+
+
+
+
+
+exports.getAllEntities = function(req, res)
+{
+    var data = querystring.stringify({
+        url : req.query.url,
+        apikey: "ae4799220327659bbe7444c8e61155d32f47e06a",
+        outputMode : "json",
+        maxRetrieve : "100"
+      });
+
+    var options = {
+        host: 'access.alchemyapi.com',
+        path: '/calls/url/URLGetRankedNamedEntities',
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'Content-Length': data.length
+        }
+      }
+
+    callback = function(response) {  
+        var str = '';
+        //another chunk of data has been recieved, so append it to `str`
+        response.on('data', function (chunk) {
+          str += chunk;
+        });
+
+        //the whole response has been recieved, so we just print it out here
+        response.on('end', function () {
+          console.log("entity extraction ends");
+          res.set("Content-Type", "application/json");
+          res.send(str);
+        });  
+      };  
+
+      var call = http.request(options, callback);
+      call.write(data);
+      call.end();
+      call.on('error', function(){
+        console.error("Error while fetching entities");
+        res.set("Content-Type", "application/json");
+        res.send({"Error" :  call});
+      });
+}
+
