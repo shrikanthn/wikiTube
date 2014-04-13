@@ -13,7 +13,7 @@ $(document).ready(function(){
       },
       select: function( event, ui ) {
 
-        $.ajax( {
+        $.ajax({
             url : "/getEntities?term=" + ui.item.value, 
             success : function(data) { 
             if(data['items']) {
@@ -26,7 +26,8 @@ $(document).ready(function(){
             };
             $('#video_playlist').html(content);
             }
-          });
+          }
+        });
 
         $.ajax( {
             url : "/getWikiPage?term=" + ui.item.value, 

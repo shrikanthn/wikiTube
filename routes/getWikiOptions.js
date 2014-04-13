@@ -121,11 +121,11 @@ exports.searchYoutube = function(req, res)
 
 };
 
-exports.getYoutubeVideos = function(keywords)
+var getYoutubeVideos = function(keywords, res)
 {
   var options = {
     host: 'www.googleapis.com',
-    path: '/youtube/v3/search?part=snippet&maxResults=10&order=viewCount&key=AIzaSyBgz_iSlDmVzMW2dhaNwnV9oFWjDFHDLio&key='+encodeURIComponent(keywords)
+    path: '/youtube/v3/search?part=snippet&maxResults=10&order=viewCount&key=AIzaSyBgz_iSlDmVzMW2dhaNwnV9oFWjDFHDLio&q='+encodeURIComponent(keywords)
   };
 
   callback = function(response) {
@@ -138,15 +138,12 @@ exports.getYoutubeVideos = function(keywords)
 
     //the whole response has been recieved, so we just print it out here
     response.on('end', function () {
-      console.log(str);
-      console.log(response.headers);
-      res.set('content-type', 'text/plain');
-      var newUrl = response.headers.location;
-      res.send(newUrl);
+      res.set("Content-Type", "application/json");
+      res.send(JSON.parse(str));
     });  
   };
 
-  var call = http.request(options, callback);
+  var call = https.request(options, callback);
   call.on('error', function(e) {
     res.set('content-type', 'application/json');
     res.send({'Error' : call});
@@ -161,6 +158,7 @@ exports.getEntities = function(req, res)
       host: 'en.wikipedia.org',
       path: '/w/api.php?action=mobileview&format=json&redirect=no&sections=0&prop=text&sectionprop=toclevel|level|line|number|index|fromtitle|anchor&page='+encodeURIComponent(req.query.term)
     };
+    var youtubevideos = {};
     
     console.log('entitity fetch begin');
 
@@ -209,8 +207,18 @@ exports.getEntities = function(req, res)
         //the whole response has been recieved, so we just print it out here
         response.on('end', function () {
           console.log("entity extraction ends");
-          console.log(str1);
-        });
+          str1 = JSON.parse(str1);
+          var entities = [];
+          for(var i=0; i<str1.entities.length; i++)
+          {
+              entities.push(str1.entities[i].text);
+              if(i == 2)
+                break;
+          }
+
+          console.log(entities);
+          getYoutubeVideos(entities.join(" "), res);
+        });  
       };
 
       var call = http.request(options1, callback1);
