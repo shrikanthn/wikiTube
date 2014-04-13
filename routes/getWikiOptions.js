@@ -2,6 +2,7 @@
 var http = require("http");
 var https = require("https");
 var url = require('url');
+var querystring = require('querystring');
 
 
 exports.getJSON = function(req, res)
@@ -34,7 +35,7 @@ exports.getWikiPage = function(req, res)
 {
   var options = {
     host: 'en.wikipedia.org',
-    path: '/w/index.php?title=Special%3ASearch&search='+encodeURIComponent(req.query.term)
+    path: '/w/index.php?title=Special%3ASearch&redirect=yes&search='+encodeURIComponent(req.query.term)
   };
 
   callback = function(response) {
@@ -54,19 +55,19 @@ exports.getWikiPage = function(req, res)
       // require("jsdom").defaultDocumentFeatures = {
       //     FetchExternalResources: ["script", "img", "css", "frame", "iframe", "link"],
       //     ProcessExternalResources: false
-      // };
-      // var jsdom = require("jsdom");
+      //};
+      //var jsdom = require("jsdom");
 
-      // jsdom.env(
-      //   str,
-      //   ["http://code.jquery.com/jquery.js"],
-      //   function (errors, window) {
-      //       //console.log(window.$("body").text());
+       /*jsdom.env(
+         str,
+         ["http://code.jquery.com/jquery.js"],
+         function (errors, window) {
+              console.log("hello");
+             //console.log(window.$("body").text());
       //       res.set('content-type', 'text/html');
       //       ;
-      //   }
-      // );
-
+         }
+       );*/
 
       var newUrl = response.headers.location;
       res.send(newUrl);
@@ -75,9 +76,6 @@ exports.getWikiPage = function(req, res)
 
   http.request(options, callback).end();
 };
-
-
-
 
 exports.searchYoutube = function(req, res)
 {
@@ -89,17 +87,12 @@ exports.searchYoutube = function(req, res)
   callback = function(response) {
     var str = '';
 
-    response.on('data', function (chunk) {
-      str += chunk;
-    });
-
     response.on('end', function () {
       console.log(str);
       res.set('content-type', 'application/json');
       res.send(str);
     });
   }
-
   https.request(options, callback).end();
 };
 
@@ -127,6 +120,74 @@ exports.getYoutubeVideos = function(keywords)
       res.send(newUrl);
     });
   }
+}
+
+exports.getEntities = function(req, res)
+{
+    var options = {
+    host: 'en.wikipedia.org',
+    path: '/w/api.php?action=mobileview&format=json&redirect=no&sections=0&prop=text&sectionprop=toclevel|level|line|number|index|fromtitle|anchor&page='+encodeURIComponent("USC")
+    };
+
+    callback = function(response) {
+    var str = '';
+
+    //another chunk of data has been recieved, so append it to `str`
+    response.on('data', function (chunk) {
+      str += chunk;
+    });
+
+    //the whole response has been recieved, so we just print it out here
+    response.on('end', function () {
+
+      console.log("hello");
+
+      str = JSON.parse(str);
+      str = str.mobileview.sections[0].text.replace(/<\/?[^>]+(>|$)/g, "");
+  
+      console.log(str);
+
+      var data = querystring.stringify({
+        text : str,
+        apikey: "ae4799220327659bbe7444c8e61155d32f47e06a",
+        outputMode : "json",
+        maxRetrieve : "20"
+      });
+
+      var options1 = {
+        host: 'access.alchemyapi.com',
+        path: '/calls/text/TextGetRankedNamedEntities',
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'Content-Length': data.length
+        }
+      }
+
+      callback1 = function(response) {  
+        var str1 = '';
+        //another chunk of data has been recieved, so append it to `str`
+        response.on('data', function (chunk) {
+          str1 += chunk;
+        });
+
+        //the whole response has been recieved, so we just print it out here
+        response.on('end', function () {
+          console.log("here!");
+          console.log(str1);
+        });
+      };
+
+      var call = http.request(options1, callback1);
+      call.write(data);
+      call.end();
+      call.on('error', function(){
+        res.set("Content-Type", "application/json");
+        res.send({"Error" :  call});
+      });
+
+    });
+  }
 
   http.request(options, callback).end();
-};
+}

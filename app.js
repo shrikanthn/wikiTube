@@ -36,6 +36,7 @@ app.get('/getWikiOptions', wikiOptions.getJSON);
 app.get('/getWikiPage', wikiOptions.getWikiPage);
 app.post('/searchYoutube', wikiOptions.searchYoutube);
 app.post('/searchArtist', gracenote.searchArtist);
+app.get('/getEntities', wikiOptions.getEntities);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
