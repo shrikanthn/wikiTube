@@ -7,6 +7,7 @@ var express = require('express');
 var routes = require('./routes');
 var user = require('./routes/user');
 var wikiOptions = require('./routes/getWikiOptions');
+var gracenote = require('./routes/gracenote');
 var http = require('http');
 var path = require('path');
 
@@ -34,6 +35,7 @@ app.get('/users', user.list);
 app.get('/getWikiOptions', wikiOptions.getJSON);
 app.get('/getWikiPage', wikiOptions.getWikiPage);
 app.post('/searchYoutube', wikiOptions.searchYoutube);
+app.post('/searchArtist', gracenote.searchArtist);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
