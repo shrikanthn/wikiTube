@@ -37,6 +37,8 @@ $(document).ready(function(){
                 // $('#ytplayer').attr('src', "http://www.youtube.com/embed/"+$(this).attr('rel')+"?autoplay=1&origin=http://example.com");
               });
 
+              $('#youtube_video').html('');
+              $('#youtube_video').html('<iframe id="ytplayer" type="text/html" width="425" height="349" src="http://www.youtube.com/embed/'+content[0]['id']['videoId']+'?autoplay=1&origin=http://example.com" frameborder="0"/>');                
               $('#youtube_video').slideDown(1000);
               $('#divSearchTool').slideUp(1000);
               $('#topMenu').show();

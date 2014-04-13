@@ -125,7 +125,7 @@ var getYoutubeVideos = function(keywords, res)
 {
   var options = {
     host: 'www.googleapis.com',
-    path: '/youtube/v3/search?part=snippet&maxResults=10&order=viewCount&key=AIzaSyBgz_iSlDmVzMW2dhaNwnV9oFWjDFHDLio&q='+encodeURIComponent(keywords)
+    path: '/youtube/v3/search?part=snippet&maxResults=30&order=viewCount&key=AIzaSyBgz_iSlDmVzMW2dhaNwnV9oFWjDFHDLio&q='+encodeURIComponent(keywords)
   };
 
   callback = function(response) {
