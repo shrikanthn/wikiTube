@@ -12,7 +12,7 @@ exports.searchArtist = function(req, res)
 	<CLIENT>15450112-F98DFB0B79644829B6195029A0ACFBD6</CLIENT> \
 	<USER>259892980560592564-CE98DEA6E64B31A49D4930A7FDA747A2</USER> \
 	</AUTH> \
-	<QUERY CMD="ALBUM_SEARCH"> \
+	<QUERY CMD="ALBUM_SEARCH"> <MODE>SINGLE_BEST_COVER</MODE> \
 	<TEXT TYPE="ARTIST">'+keywords+'</TEXT> \
 	</QUERY></QUERIES>';
 
@@ -42,6 +42,7 @@ exports.searchArtist = function(req, res)
     response.on('end', function () {
 
     	var parseString = require('xml2js').parseString;
+
 		parseString(str, function (err, result) {
 		    console.dir(result);
 		    res.set('content-type', 'application/json');
@@ -51,9 +52,14 @@ exports.searchArtist = function(req, res)
     });
   };
 
-  // Set up the request
-  var post_req = https.request(options, callback);
-  post_req.write(post_data);
-  post_req.end();
+	// Set up the request
+	var post_req = https.request(options, callback);
+	post_req.write(post_data);
+	post_req.end();
 
+  	if ( post_req instanceof Error ) {
+    // handle the error safely
+    	res.set('content-type', 'application/json');
+    	res.send({'Error' : post_req});
+	}
 };
