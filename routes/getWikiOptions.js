@@ -93,6 +93,8 @@ exports.getWikiPage = function(req, res)
 
 exports.searchYoutube = function(req, res)
 {
+  this.searchTerm = req.body.term;
+  console.log('searching youtube for : ' + this.searchTerm);
   var options = {
     host: 'www.googleapis.com',
     path: '/youtube/v3/search?part=snippet&maxResults=20&order=viewCount&key=AIzaSyBgz_iSlDmVzMW2dhaNwnV9oFWjDFHDLio&q='+encodeURIComponent(req.body.term)
@@ -106,7 +108,8 @@ exports.searchYoutube = function(req, res)
     });
 
     response.on('end', function () {
-        console.log(str);
+        //console.log(str);
+        console.log('completed searching Youtube videos : term : ' + searchTerm);
         res.set('content-type', 'application/json');
         res.send(str);
       });
@@ -121,11 +124,11 @@ exports.searchYoutube = function(req, res)
 
 };
 
-var getYoutubeVideos = function(keywords, res)
+var getYoutubeVideos = function(keywords, res, entities)
 {
   var options = {
     host: 'www.googleapis.com',
-    path: '/youtube/v3/search?part=snippet&maxResults=30&order=viewCount&key=AIzaSyBgz_iSlDmVzMW2dhaNwnV9oFWjDFHDLio&q='+encodeURIComponent(keywords)
+    path: '/youtube/v3/search?part=snippet&maxResults=5&order=viewCount&key=AIzaSyBgz_iSlDmVzMW2dhaNwnV9oFWjDFHDLio&q='+encodeURIComponent(keywords)
   };
 
   callback = function(response) {
@@ -139,6 +142,8 @@ var getYoutubeVideos = function(keywords, res)
     //the whole response has been recieved, so we just print it out here
     response.on('end', function () {
       res.set("Content-Type", "application/json");
+      //console.log(str);
+      console.log('Completed fetching entitites');
       res.send(JSON.parse(str));
     });  
   };
@@ -164,7 +169,7 @@ exports.getEntities = function(req, res)
 
     var options = {
         host: 'access.alchemyapi.com',
-        path: '/calls/url/URLGetRankedNamedEntities',
+        path: '/calls/url/URLGetRankedKeywords',
         method: 'POST',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
@@ -184,15 +189,16 @@ exports.getEntities = function(req, res)
           console.log("entity extraction ends");
           str1 = JSON.parse(str1);
           var entities = [];
-          for(var i=0; i<str1.entities.length; i++)
+          for(var i=0; i<str1.keywords.length; i++)
           {
-              entities.push(str1.entities[i].text);
-              if(i == 2)
+              entities.push(str1.keywords[i].text);
+              if(i == 5)
                 break;
           }
 
-          console.log(entities);
-          getYoutubeVideos(entities.join(" "), res);
+          //console.log(entities);
+          res.send(entities);
+          //getYoutubeVideos(entities.join(" "), res, entities);
         });  
       };  
 
