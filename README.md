@@ -8,7 +8,7 @@ This project was conceptualized, developed and presented at the hackathon : LA-H
 
 This mashup integrates audio / video information along with wikipedia giving the wiki reader a more holistic outlook about the topic.
 
-#APIs Used
+## APIs Used
 Google youtube API
 Wiki API
 Gracenote API
