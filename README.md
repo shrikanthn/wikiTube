@@ -27,7 +27,7 @@ npm install follow-redirects
 npm install jsdom xml2js
 ```
 
-Now, to run the web version of karma:
+Now, to run the web version:
 ```
 node app.js
 ```
